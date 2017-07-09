@@ -65,9 +65,11 @@ string CRFProtocol::Parse(base_type* data, size_t dataLen)
 	{
 //		3 - декодируем набор бит в осмысленные данные (команду, температуру etc)
 		string res = getName() + ":" + DecodeData(bits);
-//		uint8_t tmpBuffer[100];
-//		size_t tmpBufferSize = sizeof(tmpBuffer);
-//		EncodeData(res, 2000, tmpBuffer, tmpBufferSize);
+		/*
+		uint8_t tmpBuffer[100];
+		size_t tmpBufferSize = sizeof(tmpBuffer);
+		EncodeData(res, 1666, tmpBuffer, tmpBufferSize);
+		*/
 		return res;
 	}
 
@@ -421,18 +423,21 @@ string replaceDouble(const string &src, char search, char replace)
 string CRFProtocol::ManchesterEncode(const string&bits, bool invert, char shortPause, char longPause, char shortPulse, char longPulse)
 {
 	string res;
+	string step0 = "XX"; step0[0] = shortPulse; step0[1] = shortPause;
+	string step1 = "XX"; step1[1] = shortPulse; step1[0] = shortPause;
+
 	for_each_const(string, bits, i)
 	{
 		bool bit = *i == '1';
 
 		if (bit ^ invert)
 		{
-			res += "Aa";
+			res += step0;
 			//lastPulse = false;
 		}
 		else
 		{
-			res += "aA";
+			res += step1;
 			//lastPulse = true;
 		}
 
