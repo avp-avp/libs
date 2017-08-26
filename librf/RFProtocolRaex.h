@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include "RFProtocol.h"
 class RFLIB_API CRFProtocolRaex :
 	public CRFProtocol
@@ -9,7 +9,10 @@ public:
 
 	virtual string getName() { return "Raex"; };
 	virtual string DecodePacket(const string&);
-	virtual string DecodeData(const string&); // Преобразование бит в данные
+	virtual string DecodeData(const string&); // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Р±РёС‚ РІ РґР°РЅРЅС‹Рµ
 
+											  // РљРѕРґРёСЂРѕРІР°РЅРёРµ
+	virtual string bits2timings(const string &bits);
+	virtual string data2bits(const string &data);
 };
 

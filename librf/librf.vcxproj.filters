@@ -57,6 +57,9 @@
     <ClCompile Include="RFProtocolVhome.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RFProtocolSmartHome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RFAnalyzer.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RFProtocolVhome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RFProtocolSmartHome.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

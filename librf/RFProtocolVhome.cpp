@@ -18,6 +18,12 @@ static range_type g_timing_pulse[8] =
 };
 
 
+static const uint16_t g_transmit_data[] =
+{
+	400, 1200, 3600, 0,  // Pauses
+	400, 1200, 12000, 0   // Pulses
+};
+
 
 CRFProtocolVhome::CRFProtocolVhome()
 	:CRFProtocol(g_timing_pause, g_timing_pulse, 25, 1, "a")
@@ -28,6 +34,7 @@ CRFProtocolVhome::CRFProtocolVhome()
 
 CRFProtocolVhome::~CRFProtocolVhome()
 {
+	SetTransmitTiming(g_transmit_data);
 }
 
 
