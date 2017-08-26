@@ -83,7 +83,7 @@ void CIPConnection::Connect(string ConnectString)
 	//----------------------
 	// Connect to server.
 	if ( connect( m_Socket, (sockaddr*) &clientService, sizeof(clientService) ) == SOCKET_ERROR)
-		throw CHaException(CHaException::ErrConnectError, "Error at connect(): %ld", WSAGetLastError());
+		throw CHaException(CHaException::ErrConnectError, "Error at connect to %s: %ld", ConnectString.c_str(), WSAGetLastError());
 
 	if (m_Timeout )
 	{
