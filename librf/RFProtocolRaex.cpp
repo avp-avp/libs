@@ -115,7 +115,7 @@ string CRFProtocolRaex::bits2timings(const string &bits)
 	return s+s+s+s;
 }
 
-long long hex2i64(string s)
+long long hex2i64_2(string s)
 {
 	long long val = 0;
 	for_each(string, s, i)
@@ -148,7 +148,7 @@ string CRFProtocolRaex::data2bits(const string &data)
 	string sBtn = values["btn"];
 	string sCh = values["ch"];
 
-	long long packet = hex2i64(sRaw);
+	long long packet = hex2i64_2(sRaw);
 	string res = '1'+ reverse(l2bits((packet >> 3 * 16) & 0xFFFF, 8)) +
 		reverse(l2bits((packet >> 2 * 16) & 0xFFFF, 16)) +
 		reverse(l2bits((packet >> 1 * 16) & 0xFFFF, 16)) +
