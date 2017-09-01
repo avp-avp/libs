@@ -297,6 +297,8 @@ void CLog::Open(LogParam *Config)
 		int pos = m_BasePath.find_last_of(FOLDER_DELIMETER);
 		if (pos>0)
 			m_BasePath  = m_BasePath.substr(0, pos);
+#else
+		m_BasePath = "/run";
 #endif
 	}
 

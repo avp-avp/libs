@@ -18,9 +18,10 @@ CThread::~CThread()
 #ifdef WIN32
 	DWORD WINAPI ThreadProc(void *param)
 	{
+		CThread* thread = (CThread*)param;
+
 		try
 		{
-			CThread* thread = (CThread*)param;
 			thread->ThreadProc();
 		}
 		catch (CHaException ex)
@@ -31,6 +32,8 @@ CThread::~CThread()
 			else
 				printf("ThreadProc got unhandled exception, close thread. Error code %d, Message '%s'.\n", ex.GetCode(), ex.GetMessage().c_str());
 		}
+
+		thread->ClearHandle();
 		return 0;
 	}
 #else
@@ -49,9 +52,10 @@ CThread::~CThread()
 			//log->Printf(0, "stackaddr = %p, stacksize = %d\n", stackaddr, stacksize );
 		}
 		
+		CThread* thread = (CThread*)param;
+
 		try
 		{
-			CThread* thread = (CThread*)param;
 			thread->ThreadProc();
 		}
 		catch (CHaException ex)
@@ -62,12 +66,17 @@ CThread::~CThread()
 			else
 				printf("ThreadProc got unhandled exception, close thread. Error code %d, Message '%s'.\n", ex.GetCode(), ex.GetMessage().c_str());
 		}
+
+		thread->ClearHandle();
 		return NULL;
 	}
 #endif
 
 void CThread::Start()
 {
+	if (m_hThreadHandle)
+		return;
+
 #ifdef WIN32
 	DWORD ThreadID;
 	m_hThreadHandle = CreateThread(NULL, 0, ::ThreadProc, this, 0, &ThreadID);
@@ -94,12 +103,14 @@ void CThread::Start()
 
 bool CThread::Wait(DWORD timeOut)
 {
+	bool retval = true;
 #ifdef WIN32
-	return WaitForSingleObject(m_hThreadHandle, timeOut) == WAIT_OBJECT_0;
+	retval = WaitForSingleObject(m_hThreadHandle, timeOut) == WAIT_OBJECT_0;
 #else
 	pthread_join(m_hThreadHandle, NULL);
 //	#error PLATFORM NOT SUPPORTED
 #endif
-	return false;
+
+	return retval;
 }
 

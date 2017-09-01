@@ -18,6 +18,7 @@ public:
 	void Start();
 	bool Wait(DWORD timeOut);
 	virtual int ThreadProc() = 0;
+	void ClearHandle() { m_hThreadHandle = 0; };
 };
 
 #ifndef WIN32
