@@ -39,7 +39,7 @@ void CConfig::Load(string ConfigFileName)
 		doc = doc.substr(3);
 	bool parsingSuccessful = reader.parse(doc, root, std::ifstream::binary);
 	if (!parsingSuccessful)
-		throw CHaException(CHaException::ErrParsingError, "Failed to parse %s. Error %s", ConfigFileName.c_str(), reader.getFormattedErrorMessages().c_str());
+		throw CHaException(CHaException::ErrParsingError, "Failed to parse JSON file %s. Error %s", ConfigFileName.c_str(), reader.getFormattedErrorMessages().c_str());
 	m_Document = root;
 #else
 #	error usupported configuration

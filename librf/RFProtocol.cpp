@@ -12,7 +12,7 @@ string c2s(char c)
 CRFProtocol::CRFProtocol(range_array_type zeroLengths, range_array_type pulseLengths, int bits, int minRepeat, string PacketDelimeter)
 :m_ZeroLengths(zeroLengths), m_PulseLengths(pulseLengths), m_Bits(bits), m_MinRepeat(minRepeat), m_PacketDelimeter(PacketDelimeter), m_InvertPacket(true)
 {
-	m_Debug = false;
+	m_Debug = true;
 	m_InvertPacket = false;
 	m_Log = CLog::Default();
 }
@@ -65,9 +65,11 @@ string CRFProtocol::Parse(base_type* data, size_t dataLen)
 	{
 //		3 - декодируем набор бит в осмысленные данные (команду, температуру etc)
 		string res = getName() + ":" + DecodeData(bits);
-//		uint8_t tmpBuffer[100];
-//		size_t tmpBufferSize = sizeof(tmpBuffer);
-//		EncodeData(res, 2000, tmpBuffer, tmpBufferSize);
+		/*
+		uint8_t tmpBuffer[100];
+		size_t tmpBufferSize = sizeof(tmpBuffer);
+		EncodeData(res, 1666, tmpBuffer, tmpBufferSize);
+		*/
 		return res;
 	}
 
@@ -87,6 +89,12 @@ string CRFProtocol::DecodeRaw(base_type* data, size_t dataLen)
 
 		if (isPulse(data[i]))
 		{
+			while (i < dataLen-1 && isPulse(data[i+1]))
+			{
+				i++;
+				len+= getLengh(data[i]);
+			}
+
 			int pos = 0;
 			for (; m_PulseLengths[pos][0]; pos++)
 			{
@@ -99,7 +107,7 @@ string CRFProtocol::DecodeRaw(base_type* data, size_t dataLen)
 
 			if (!m_PulseLengths[pos][0])
 			{
-				if (m_Debug) // Если включена отладка - явно пишем длины плохих пауз
+				if (m_Debug) // Если включена отладка - явно пишем длины плохих пульсов
 					decodedRaw += string("[") + itoa(len) + "}";
 				else
 					decodedRaw += "?";
@@ -128,6 +136,12 @@ string CRFProtocol::DecodeRaw(base_type* data, size_t dataLen)
 		}
 		else
 		{
+			while (i < dataLen - 1 && !isPulse(data[i + 1]))
+			{
+				i++;
+				len += getLengh(data[i]);
+			}
+
 			int pos = 0;
 			for (; m_ZeroLengths[pos][0]; pos++)
 			{
@@ -187,12 +201,23 @@ string CRFProtocol::DecodeBits(string_vector&rawPackets)
 
 	for_each(string_vector, rawPackets, s)
 	{
-		string packet;
-		size_t pos = s->find(m_Debug ? '[' : '?');
-		if (pos != string::npos)
-			packet = s->substr(0, pos);
-		else
-			packet = *s;
+		string packet = *s;
+		do
+		{
+			size_t pos = packet.find(m_Debug ? '[' : '?');
+			if (pos == 0)
+			{
+				if (m_Debug)
+				{
+					while (packet.length() && packet[0] != '}' && packet[0] != ']')
+						packet = packet.substr(1);
+				}
+				packet = packet.substr(1);
+				continue;
+			} else if (pos != string::npos)
+				packet = packet.substr(0, pos);
+			
+		} while (0);
 
 		if (!packet.length())
 			continue;
@@ -398,18 +423,21 @@ string replaceDouble(const string &src, char search, char replace)
 string CRFProtocol::ManchesterEncode(const string&bits, bool invert, char shortPause, char longPause, char shortPulse, char longPulse)
 {
 	string res;
+	string step0 = "XX"; step0[0] = shortPulse; step0[1] = shortPause;
+	string step1 = "XX"; step1[1] = shortPulse; step1[0] = shortPause;
+
 	for_each_const(string, bits, i)
 	{
 		bool bit = *i == '1';
 
 		if (bit ^ invert)
 		{
-			res += "Aa";
+			res += step0;
 			//lastPulse = false;
 		}
 		else
 		{
-			res += "aA";
+			res += step1;
 			//lastPulse = true;
 		}
 

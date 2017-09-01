@@ -69,6 +69,7 @@ public:
 		ErrSystemAPIError,
 		ErrBadParam,
 		ErrLuaException,
+		ErrNotFound,
 
 		ErrLast
 	};

@@ -34,13 +34,13 @@ void CIPListener::Listen(int Port)
 
 
 	if (bind( m_Socket, (sockaddr*) &service, sizeof(service)) == SOCKET_ERROR)
-		throw CHaException(CHaException::ErrCreateSocketError, "bind() failed.\n");
+		throw CHaException(CHaException::ErrCreateSocketError, "bind(%d) failed.\n", Port);
 
 	//----------------------
 	// Listen for incoming connection requests 
 	// on the created socket
 	if (listen( m_Socket, SOMAXCONN ) == SOCKET_ERROR)
-		throw CHaException(CHaException::ErrCreateSocketError, "listen() failed.\n");
+		throw CHaException(CHaException::ErrCreateSocketError, "listen(%d) failed.\n", Port);
 
 	m_Connected = true;
 }

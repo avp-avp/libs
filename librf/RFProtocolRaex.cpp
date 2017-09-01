@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "RFProtocolRaex.h"
 
 static range_type g_timing_pause[7] =
@@ -17,10 +17,16 @@ static range_type g_timing_pulse[8] =
 	{ 0,0 }
 };
 
+static const uint16_t g_transmit_data[] =
+{
+	2400, 600, 1200, 0,  // Pauses
+	2400, 600, 1200, 0   // Pulses
+};
 
 CRFProtocolRaex::CRFProtocolRaex()
 	:CRFProtocol(g_timing_pause, g_timing_pulse, 57, 2, "A")
 {
+	SetTransmitTiming(g_transmit_data);
 }
 
 
@@ -101,3 +107,52 @@ string CRFProtocolRaex::DecodeData(const string& packet)
 
 	return res;
 }
+
+
+string CRFProtocolRaex::bits2timings(const string &bits)
+{
+	string s = "Aa" + ManchesterEncode(bits, false, 'b', 'c', 'B', 'C');
+	return s+s+s+s;
+}
+
+long long hex2i64_2(string s)
+{
+	long long val = 0;
+	for_each(string, s, i)
+	{
+		val = (val << 4);
+		if (*i >= '0' && *i <= '9')
+			val += *i - '0';
+		else if (*i >= 'A' && *i <= 'F')
+			val += *i - 'A' + 10;
+		else if (*i >= 'a' && *i <= 'f')
+			val += *i - 'a' + 10;
+		else
+			throw CHaException(CHaException::ErrParsingError, "Ivalid char '%c'(%02x)", *i, *i);
+	}
+
+	return val;
+};
+
+string CRFProtocolRaex::data2bits(const string &data)
+{
+	string proto, dataDetail;
+	SplitPair(data, ':', proto, dataDetail);
+	if (proto != "Raex")
+		throw CHaException(CHaException::ErrBadParam, "Bad protocol in '" + data + "'");
+
+	string_map values;
+	SplitValues(dataDetail, values);
+
+	string sRaw = values["raw"];
+	string sBtn = values["btn"];
+	string sCh = values["ch"];
+
+	long long packet = hex2i64_2(sRaw);
+	string res = '1'+ reverse(l2bits((packet >> 3 * 16) & 0xFFFF, 8)) +
+		reverse(l2bits((packet >> 2 * 16) & 0xFFFF, 16)) +
+		reverse(l2bits((packet >> 1 * 16) & 0xFFFF, 16)) +
+		reverse(l2bits(packet & 0xFFFF, 16));
+	return res; 
+}
+
