@@ -8,7 +8,7 @@ class LIBCOMM_API CIPListener :
 public:
 	CIPListener(void);
 	virtual ~CIPListener(void);
-	void Listen(int Port);
+	void Listen(int Port, string address="");
 	virtual void OnSelect(CSupervisor *superviser);
 
 };

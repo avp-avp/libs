@@ -35,7 +35,7 @@ public:
 
 	void SetLog(CLog *log) { m_webServerLog = log; };
 	void SetSupervisor(CSupervisor *supervisor);
-	void Listen(int Port);
+	void Listen(int Port, string Host="");
 
 	void SendReply(CConnection* conn, string reply, bool closeConnection = true);
 };

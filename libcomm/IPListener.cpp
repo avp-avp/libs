@@ -12,7 +12,7 @@ CIPListener::~CIPListener(void)
 {
 }
 
-void CIPListener::Listen(int Port)
+void CIPListener::Listen(int Port, string address)
 {
 	m_Name = "LISTEN "+itoa(Port);
 	//----------------------
@@ -29,7 +29,7 @@ void CIPListener::Listen(int Port)
 	// IP address, and port for the socket that is being bound.
 	sockaddr_in service;
 	service.sin_family = AF_INET;
-	service.sin_addr.s_addr = INADDR_ANY;
+	service.sin_addr.s_addr = address.length()? inet_addr(address.c_str()) : INADDR_ANY;
 	service.sin_port = htons(Port);
 
 

@@ -11,6 +11,7 @@ CConnection::CConnection(void)
 
 CConnection::~CConnection(void)
 {
+	CLog::Default()->Printf(0, "~CConnection(%p)", this);
 }
 
 void CConnection::SetTimeout(int Timeout)

@@ -318,7 +318,8 @@ void CWebServer::OnRecieve(CConnection* Conn)
 	}
 	catch (CHaException ex)
 	{
-		m_webServerLog->Printf(4, "CWebServerConnector::OnRecieve runtime error. Error code %d, Message '%s'.\n", ex.GetCode(), ex.GetMessage().c_str());
+		//if (ex.GetCode()!= CHaException::ErrRecvError)
+			m_webServerLog->Printf(4, "CWebServerConnector::OnRecieve runtime error. Error code %d, Message '%s'.\n", ex.GetCode(), ex.GetMessage().c_str());
 		m_Supervisor->RemoveConnection(Conn);
 
 		CConnectionData::iterator i = m_ConnectionData.find(Conn);
@@ -387,10 +388,10 @@ void CWebServer::SendReply(CConnection* Conn, string Reply, bool closeConnection
 }
 
 
-void CWebServer::Listen(int Port)
+void CWebServer::Listen(int Port, string Host)
 {
 	m_Listener = new CIPListener();
-	m_Listener->Listen(Port);
+	m_Listener->Listen(Port, Host);
 
 	m_Supervisor->AddConnection(this, m_Listener);
 

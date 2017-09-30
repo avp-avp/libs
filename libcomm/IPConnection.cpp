@@ -209,12 +209,14 @@ string CIPConnection::GetPeerName()
 {
 	sockaddr_in addr;
 	socklen_t size= sizeof(addr);
-	if (getpeername(getSocket(), (sockaddr*)&addr, &size)==0)
+	if (getpeername(getSocket(), (sockaddr*)&addr, &size) == 0)
 	{
 		char Buffer[500];
 		snprintf(Buffer, sizeof(Buffer), "%s:%d", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 		return Buffer;
 	}
+	else if (m_ConnectString.length())
+		return m_ConnectString;
 	else
 		return "<FAIL>";
 
