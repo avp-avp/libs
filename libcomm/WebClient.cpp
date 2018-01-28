@@ -2,25 +2,30 @@
 #include "WebClient.h"
 #include "../libutils/strutils.h"
 
+#ifdef HAVE_CURL_CURL_H	
+	#include <curl/curl.h>
+#endif
+
 
 CWebClient::CWebClient(CSupervisor *Supervisor, int Timeout)
-	:m_Supervisor(Supervisor), m_ContentType(None), m_RequestType(Get), m_HaveResponse(false), m_ResponseCode(0), m_Connection(NULL), m_Timeout(Timeout)
+	:m_Supervisor(Supervisor), m_ContentType(None), m_RequestType(Get), m_HaveResponse(false), m_ResponseCode(0), m_Connection(NULL), 
+	m_Timeout(Timeout)
 {
 	m_RequestTime = 0;
 }
-
 
 CWebClient::~CWebClient()
 {
 	if (m_Connection)
 		m_Connection->Disconnect();
 
-	m_Supervisor->RemoveClient(this, true);
+	if (m_Supervisor)
+		m_Supervisor->RemoveClient(this, true);
 }
-
 
 void CWebClient::Send(string url, string host, string Content)
 {
+	m_Response = "";
 	if (Content.length() > 0)
 	{
 		SetRequestType(Post);
@@ -49,7 +54,6 @@ void CWebClient::Send(string url, string host, string Content)
 	m_Supervisor->AddConnection(this, m_Connection);
 	m_Connection->Send(req.c_str(), req.length());
 	time(&m_RequestTime);
-
 }
 
 
@@ -65,6 +69,7 @@ string CWebClient::GetRequestType()
 
 	return "";
 }
+
 string CWebClient::GetContentType()
 {
 	switch (m_ContentType)
@@ -203,3 +208,51 @@ void CWebClient::ClearResponse(){
 bool CWebClient::isTimeout(){
 	return m_RequestTime>0 && m_RequestTime+m_Timeout<time(NULL);
 }
+
+CCurlWebClient::CCurlWebClient(int Timeout)
+	:CWebClient(NULL, Timeout), m_curl(NULL)
+{
+
+}
+
+CCurlWebClient::~CCurlWebClient()
+{
+	if (m_curl)
+		curl_easy_cleanup(m_curl);
+
+}
+
+size_t CCurlWebClient::WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+	size_t realsize = size * nmemb;
+	CWebClient *client = (CWebClient*)userp; 
+	client->AddResponse( string((char*)contents, realsize) ); 
+	return realsize;
+}
+
+
+void CCurlWebClient::Send(string url, string host, string Content)
+{
+	if (host.find(':')==host.npos) host="http://"+host;
+	string full_url = host+url;
+
+	if (!m_curl) m_curl = curl_easy_init();
+	curl_easy_setopt(m_curl, CURLOPT_TIMEOUT	, m_Timeout);
+	if (m_RequestType==Post) curl_easy_setopt(m_curl, CURLOPT_POST, 1L);
+	if (Content.length()) {
+		curl_easy_setopt(m_curl, CURLOPT_POSTFIELDS, Content.c_str());
+		curl_easy_setopt(m_curl, CURLOPT_POSTFIELDSIZE, Content.length());
+	}
+	curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+	curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
+	curl_easy_setopt(m_curl, CURLOPT_URL, (full_url).c_str());
+	CURLcode res = curl_easy_perform(m_curl);
+    if(res == CURLE_OK) {
+	    long response_code;
+	    curl_easy_getinfo(m_curl, CURLINFO_RESPONSE_CODE, &response_code);
+	    m_ResponseCode = response_code;
+	}
+
+	m_HaveResponse = true;
+}
+
