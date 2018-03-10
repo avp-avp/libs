@@ -91,35 +91,39 @@ string CRFParser::Parse(base_type** data, size_t* length)
 	base_type splitDelay = m_maxPause*10/8;
 	base_type splitPulse = m_minPulse/2;
 
-	for(base_type* ptr=*data; ptr-*data<*length; ptr++)
-	{
-		bool isPulse = CRFProtocol::isPulse(*ptr);
-		base_type len = CRFProtocol::getLengh(*ptr);
-		if ((!isPulse && len>splitDelay) || (isPulse && len<splitPulse))
+	try {
+		for(base_type* ptr=*data; ptr-*data<*length; ptr++)
 		{
-			size_t packetLen = ptr-*data;
-			if (packetLen>50)
-				m_Log->Printf(4, "Parse part of packet from %ld size %ld splitted by %ld", *data-saveStart, packetLen, CRFProtocol::getLengh(*ptr));
+			bool isPulse = CRFProtocol::isPulse(*ptr);
+			base_type len = CRFProtocol::getLengh(*ptr);
+			if ((!isPulse && len>splitDelay) || (isPulse && len<splitPulse))
+			{
+				size_t packetLen = ptr-*data;
+				if (packetLen>50)
+					m_Log->Printf(4, "Parse part of packet from %ld size %ld splitted by %ld", *data-saveStart, packetLen, CRFProtocol::getLengh(*ptr));
 
-			string res = Parse(*data, packetLen);
-			
-			*data += packetLen+1;
-			*length -= packetLen+1;
-			
+				string res = Parse(*data, packetLen);
+				
+				*data += packetLen+1;
+				*length -= packetLen+1;
+				
+				if (res.length())
+					return res;
+			}
+		}
+
+		if (*length>MIN_PACKET_LEN)
+		{
+			string res = Parse(*data, *length);
 			if (res.length())
+			{
+				*data += (*length);
+				*length = 0;
 				return res;
+			}
 		}
-	}
-
-	if (*length>MIN_PACKET_LEN)
-	{
-		string res = Parse(*data, *length);
-		if (res.length())
-		{
-			*data += (*length);
-			*length = 0;
-			return res;
-		}
+	} catch (exception ex) {
+		m_Log->Printf(0, "Parse std::exception %s", ex.what());
 	}
 
 	return "";
@@ -130,12 +134,19 @@ string CRFParser::Parse(base_type* data, size_t len)
 	if (len < MIN_PACKET_LEN)
 		return "";
 
+	bool bForceDumpPacket = false;
 	// Пытаемся декодировать пакет каждым декодером по очереди
 	for_each(CRFProtocolList, m_Protocols, i)
 	{
-		string retval = (*i)->Parse(data, len);
-		if (retval.length())
-			return retval;  // В случае успеха возвращаем результат
+		try {
+
+			string retval = (*i)->Parse(data, len);
+			if (retval.length())
+				return retval;  // В случае успеха возвращаем результат
+		} catch (exception ex) {
+			m_Log->Printf(0, "Parser %s failed with std::exception %s", (*i)->getName().c_str(), ex.what());
+			bForceDumpPacket = true;
+		}
 	}
 
 	// В случае неуспеха пытаемся применить анализатор
@@ -152,7 +163,7 @@ string CRFParser::Parse(base_type* data, size_t len)
 	{ 
 		for_each(CRFProtocolList, m_Protocols, i)
 		{
-			if ((*i)->needDumpPacket())
+			if ((*i)->needDumpPacket() || bForceDumpPacket)
 			{
 				m_Log->Printf(3, "Dump packet for %s", (*i)->getName().c_str());
 				SaveFile(data, len);

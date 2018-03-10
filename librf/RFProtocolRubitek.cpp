@@ -44,7 +44,7 @@ string CRFProtocolRubitek::DecodePacket(const string&pkt)
 	else
 		return "";
 
-	for (unsigned int i = 0; i < packet.length() - 1; i+=2)
+	for (unsigned int i = 0; i < packet.length() - 2; i+=2)
 	{
 		string part = packet.substr(i, 2);
 		if (part == "Bc")

@@ -41,36 +41,40 @@ CRFProtocolVhome::~CRFProtocolVhome()
 string CRFProtocolVhome::DecodePacket(const string&pkt)
 {
 	string packet = pkt, res;
-
-	if (packet.length() == 48)
+	try 
 	{
-		if (packet[0] == 'c')
-			packet = "B" + packet;
-		if (packet[0] == 'b')
-			packet = "C" + packet;
-	}
+		if (packet.length() == 48)
+		{
+			if (packet[0] == 'c')
+				packet = "B" + packet;
+			if (packet[0] == 'b')
+				packet = "C" + packet;
+		}
 
-	if (packet.length() == 49)
-	{
-		if (packet[48] == 'B')
-			packet += "c";
-		if (packet[48] == 'C')
-			packet += "b";
-	}
-	else
-		return "";
-
-	for (unsigned int i = 0; i < packet.length() - 1; i += 2)
-	{
-		string part = packet.substr(i, 2);
-		if (part == "Bc")
-			res += "0";
-		else if (part == "Cb")
-			res += "1";
+		if (packet.length() == 49)
+		{
+			if (packet[48] == 'B')
+				packet += "c";
+			if (packet[48] == 'C')
+				packet += "b";
+		}
 		else
-			return 0;
-	}
+			return "";
 
+		for (unsigned int i = 0; i < packet.length() - 1; i += 2)
+		{
+			if (packet[i]=='[') break;
+			string part = packet.substr(i, 2);
+			if (part == "Bc")
+				res += "0";
+			else if (part == "Cb")
+				res += "1";
+			else
+				return "";
+		}
+	} catch (std::exception ex) {
+		throw;
+	}
 	return res;
 }
 
