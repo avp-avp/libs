@@ -54,6 +54,9 @@ void CWBControl::enrich(const string &meta, const string &val)
 	else if (meta == "order")
 	{
 	}
+	else if (meta == "units")
+	{
+	}
 	else if (meta == "error")
 	{
 		time(&LastError);
