@@ -7,11 +7,12 @@ CConnection::CConnection(void)
 	m_Timeout = 0;
 	m_AutoDelete = false;
 	m_Connected = false;
+	CLog::Default()->Printf(5, "CConnection(%p)", this);
 }
 
 CConnection::~CConnection(void)
 {
-	CLog::Default()->Printf(0, "~CConnection(%p)", this);
+	CLog::Default()->Printf(5, "~CConnection(%p)", this);
 }
 
 void CConnection::SetTimeout(int Timeout)
