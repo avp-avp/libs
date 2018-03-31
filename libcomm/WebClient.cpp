@@ -209,6 +209,8 @@ bool CWebClient::isTimeout(){
 	return m_RequestTime>0 && m_RequestTime+m_Timeout<time(NULL);
 }
 
+#ifdef HAVE_CURL_CURL_H	
+
 CCurlWebClient::CCurlWebClient(int Timeout)
 	:CWebClient(NULL, Timeout), m_curl(NULL)
 {
@@ -256,3 +258,4 @@ void CCurlWebClient::Send(string url, string host, string Content)
 	m_HaveResponse = true;
 }
 
+#endif
