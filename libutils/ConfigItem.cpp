@@ -82,38 +82,6 @@ void CConfigItem::ParseXPath(string Path, string &First, string &Other)
 		Other = "";
 	}
 }
-/*
-string CConfigItem::GetValue()
-{
-#ifdef _LIBUTILS_USE_XML_LIBXML2
-	if (m_Node)
-	{
-		xmlNodePtr node = m_Node->children;
-
-		if (!m_Node)
-			return "";
-
-		short type = node->type;
-		const xmlChar *val = node->content;/*
-		char* asciiVal = XMLString::transcode(val);
-		string result = asciiVal;
-		XMLString::release(&asciiVal);* /
-		return (char*)val;
-	}
-
-	return "";
-#endif
-}
-
-
-string CConfigItem::GetValue(string path)
-{
-#ifdef _LIBUTILS_USE_XML_LIBXML2
-	CConfigItem elem = GetElement(path);
-	return elem.GetValue();
-#endif
-}
-*/
 
 bool CConfigItem::isEmpty() 
 { 
@@ -199,16 +167,21 @@ int CConfigItem::getInt(string path, bool bMandatory, int defaultValue)
 		xmlFree(val);
 		return iVal;
 #elif defined(USE_JSON)
-		if (path.length() == 0)
-			return m_Node.asInt();
-		else
+		try
 		{
-			Json::Value val = m_Node[path];
-
-			if (val.isNull() && !bMandatory)
-				return defaultValue;
+			if (path.length() == 0)
+				return m_Node.asInt();
 			else
-				return val.asInt();
+			{
+				Json::Value val = m_Node[path];
+
+				if (val.isNull() && !bMandatory)
+					return defaultValue;
+				else
+					return val.asInt();
+			}
+		} catch (Json::LogicError ex) {
+			throw CHaException(CHaException::ErrAttributeNotFound, "Value is not a int. Param %s", path.c_str());
 		}
 #endif
 	}
@@ -292,10 +265,15 @@ void CConfigItem::getList(string path, CConfigItemList &list)
 			}
 		}
 #elif defined(USE_JSON)
-		configNode values = m_Node[First];
-		for (Json::ArrayIndex i=0;i<values.size();i++)
+		try
 		{
-			list.push_back(new CConfigItem(values[i]));
+			configNode values = m_Node[First];
+			for (Json::ArrayIndex i=0;i<values.size();i++)
+			{
+				list.push_back(new CConfigItem(values[i]));
+			}
+		} catch (Json::LogicError ex) {
+			throw CHaException(CHaException::ErrAttributeNotFound, "Value is not a array. Param %s", path.c_str());
 		}
 #endif
 	}
