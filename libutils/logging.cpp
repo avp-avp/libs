@@ -114,20 +114,15 @@ void CLog::CloseAll()
 void CLog::Init(CConfigItem *Config)
 {
 	CConfigItemList nodes;
-	printf("%s %d", __FILE__, __LINE__);
 	Config->getList("Logging", nodes);
-	printf("%s %d", __FILE__, __LINE__);
 
 	if (nodes.size()==0)
 		Config->getList("log", nodes);
 	
-	printf("%s %d", __FILE__, __LINE__);
 	for(CConfigItemList::iterator i=nodes.begin();i!=nodes.end();i++)
 	{
-	printf("%s %d", __FILE__, __LINE__);
 		m_LogsCfg[(*i)->getStr("Name", false, (*i)->getStr("name", false, "Error"))] = LogParam(**i);
 	}
-	printf("%s %d", __FILE__, __LINE__);
 }
 #endif
 
