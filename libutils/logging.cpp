@@ -114,7 +114,7 @@ void CLog::CloseAll()
 void CLog::Init(CConfigItem *Config)
 {
 	CConfigItemList nodes;
-	Config->getList("Logging", nodes);
+	Config->getList("logging", nodes);
 
 	if (nodes.size()==0)
 		Config->getList("log", nodes);

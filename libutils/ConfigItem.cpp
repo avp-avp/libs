@@ -180,7 +180,7 @@ int CConfigItem::getInt(string path, bool bMandatory, int defaultValue)
 				else
 					return val.asInt();
 			}
-		} catch (Json::LogicError ex) {
+		} catch (std::exception ex) {
 			throw CHaException(CHaException::ErrAttributeNotFound, "Value is not a int. Param %s", path.c_str());
 		}
 #endif
@@ -265,14 +265,12 @@ void CConfigItem::getList(string path, CConfigItemList &list)
 			}
 		}
 #elif defined(USE_JSON)
-		try
-		{
+		try {
 			configNode values = m_Node[First];
-			for (Json::ArrayIndex i=0;i<values.size();i++)
-			{
+			for (Json::ArrayIndex i=0;i<values.size();i++) {
 				list.push_back(new CConfigItem(values[i]));
 			}
-		} catch (Json::LogicError ex) {
+		} catch (std::exception ex) {
 			throw CHaException(CHaException::ErrAttributeNotFound, "Value is not a array. Param %s", path.c_str());
 		}
 #endif
