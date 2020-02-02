@@ -93,7 +93,7 @@ bool CConfigItem::isEmpty()
 };
 
 
-string CConfigItem::getStr(string path, bool bMandatory, string defaultValue)
+string CConfigItem::getStr(string path, bool bMandatory, string defaultValue) const
 {
 	string First, Other;
 	ParseXPath(path, First, Other);
@@ -141,7 +141,7 @@ string CConfigItem::getStr(string path, bool bMandatory, string defaultValue)
 	}
 }
 
-int CConfigItem::getInt(string path, bool bMandatory, int defaultValue)
+int CConfigItem::getInt(string path, bool bMandatory, int defaultValue) const
 {
 	string First, Other;
 	ParseXPath(path, First, Other);
@@ -187,7 +187,7 @@ int CConfigItem::getInt(string path, bool bMandatory, int defaultValue)
 	}
 }
 
-CConfigItem CConfigItem::getNode(string path, bool bMandatory)
+CConfigItem CConfigItem::getNode(string path, bool bMandatory) const
 {
 	string First, Other;
 	ParseXPath(path, First, Other);
@@ -226,6 +226,18 @@ CConfigItem CConfigItem::getNode(string path, bool bMandatory)
 		return retVal;
 	}
 }
+
+void CConfigItem::getValues(configValues &values)  const
+{
+	values.empty();
+	string_vector v = m_Node.getMemberNames();
+
+	for_each(string_vector, v, name)
+	{
+		values[*name] = m_Node[*name];
+	}
+}
+
 
 void CConfigItem::getList(string path, CConfigItemList &list)
 {

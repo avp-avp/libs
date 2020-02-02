@@ -32,6 +32,7 @@ public:
 	typedef xmlNodePtr configNode;
 #elif defined(USE_JSON)
 	typedef class Json::Value configNode;
+	typedef map<string, CConfigItem> configValues;
 #else
 #	error usupported configuration
 #endif
@@ -53,11 +54,13 @@ public:
 	static void ParseXPath(string Path, string &First, string &Other);
 
 
-	string getStr(string path, bool bMandatory = true, string defaultValue = "");
-	int getInt(string path, bool bMandatory = true, int defaultValue = 0);
-	CConfigItem getNode(string path, bool bMandatory = true);
+	string getStr(string path, bool bMandatory = true, string defaultValue = "") const;
+	int getInt(string path, bool bMandatory = true, int defaultValue = 0) const;
+	CConfigItem getNode(string path, bool bMandatory = true) const;
 	void getList(string path, CConfigItemList &list);
-
+#ifdef USE_JSON
+	void getValues(configValues &values) const;
+#endif
 	
 	/*
 	static string GetValue(const char* path);
