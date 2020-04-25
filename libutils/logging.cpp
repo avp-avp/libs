@@ -184,12 +184,12 @@ void CLog::VPrintf(int level, const char *Format, va_list marker)
 				m_File = fopen(m_FileName, "a+");
 #endif
 				if (!m_File)
-					return;
+					m_iLogLevel = -1;
 			}
 		}
 
 		if (!m_File)
-			return;
+			m_iLogLevel = -1;
 	}
 
 	if (m_bTimeLog)

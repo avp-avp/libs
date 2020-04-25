@@ -1,4 +1,4 @@
-AM_CPPFLAGS=$(XML2_CFLAGS)
+AM_CPPFLAGS=$(XML2_CFLAGS) -std=c++11
 
 lib_LTLIBRARIES = libutils.la
 libutils_la_SOURCES = Buffer.cpp Buffer.h Exception.cpp Exception.h \

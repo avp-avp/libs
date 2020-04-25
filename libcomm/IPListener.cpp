@@ -33,7 +33,7 @@ void CIPListener::Listen(int Port, string address)
 	service.sin_port = htons(Port);
 
 
-	if (bind( m_Socket, (sockaddr*) &service, sizeof(service)) == SOCKET_ERROR)
+	if (::bind( m_Socket, (sockaddr*) &service, sizeof(service)) == SOCKET_ERROR)
 		throw CHaException(CHaException::ErrCreateSocketError, "bind(%d) failed.\n", Port);
 
 	//----------------------
