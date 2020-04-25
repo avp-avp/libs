@@ -37,7 +37,7 @@ void CConfig::Load(string ConfigFileName)
 		file >> root;
 		m_Document = root;
 	} 
-	catch (Json::RuntimeError ex) {
+	catch (std::exception ex) {
 		throw CHaException(CHaException::ErrParsingError, "Failed to parse JSON file %s. Error %s", ConfigFileName.c_str(), ex.what());
 	}
 	/*
