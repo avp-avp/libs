@@ -21,9 +21,9 @@ public:
 	static size_t getSizeSize(size_t s);
 	static size_t getSizeString(const string &s);
 
-	void Serialize(char &data, bool bSerialize);
-	void Serialize(short &data, bool bSerialize);
-	void Serialize(long &data, bool bSerialize);
+	void Serialize(int8_t &data, bool bSerialize);
+	void Serialize(int16_t &data, bool bSerialize);
+	void Serialize(int32_t &data, bool bSerialize);
 	void Serialize(string &data, bool bSerialize);
 	void Serialize(const string &data){string s=data; Serialize(s, true);};
 	void SerializeBinary(void *data, size_t size, bool bSerialize);

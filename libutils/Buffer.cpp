@@ -51,7 +51,7 @@ void CBuffer::Alloc(size_t Size)
 
 size_t CBuffer::getSizeSize(size_t size)
 {
-	return sizeof(long);
+	return sizeof(int32_t);
 }
 
 size_t CBuffer::getSizeString(const string &s)
@@ -60,7 +60,7 @@ size_t CBuffer::getSizeString(const string &s)
 }
 
 
-void CBuffer::Serialize(char &data, bool bSerialize)
+void CBuffer::Serialize(int8_t &data, bool bSerialize)
 {
 	if (m_BufferPtr-m_Buffer+sizeof(char)>m_Size)
 		throw CHaException(CHaException::ErrSerialize, "CBuffer::Serialize size mismatch");
@@ -75,42 +75,42 @@ void CBuffer::Serialize(char &data, bool bSerialize)
 	}
 }
 
-void CBuffer::Serialize(short &data, bool bSerialize)
+void CBuffer::Serialize(int16_t &data, bool bSerialize)
 {
-	if (m_BufferPtr-m_Buffer+sizeof(short)>m_Size)
+	if (m_BufferPtr-m_Buffer+sizeof(int16_t)>m_Size)
 		throw CHaException(CHaException::ErrSerialize, "CBuffer::Serialize size mismatch");
 
 	if (bSerialize)
 	{
-		*((short*)m_BufferPtr)=htons(data);
+		*((int16_t*)m_BufferPtr)=htons(data);
 	}
 	else
 	{
-		data = ntohs(*((short*)m_BufferPtr));
+		data = ntohs(*((int16_t*)m_BufferPtr));
 	}
 
-	m_BufferPtr+=sizeof(short);
+	m_BufferPtr+=sizeof(int16_t);
 }
 
-void CBuffer::Serialize(long &data, bool bSerialize)
+void CBuffer::Serialize(int32_t &data, bool bSerialize)
 {
-	if (m_BufferPtr-m_Buffer+sizeof(long)>m_Size)
+	if (m_BufferPtr-m_Buffer+sizeof(int32_t)>m_Size)
 		throw CHaException(CHaException::ErrSerialize, "CBuffer::Serialize size mismatch");
 
 	if (bSerialize)
 	{
-		long t =htonl(data);
+		int32_t t =htonl(data);
 		memcpy(m_BufferPtr, &t, sizeof(t));
 //		*((long*)m_BufferPtr)=t;
 	}
 	else
 	{
-		long t;
+		int32_t t;
 		memcpy(&t, m_BufferPtr, sizeof(t));
 		data = ntohl(t);
 	}
 
-	m_BufferPtr+=sizeof(long);
+	m_BufferPtr+=sizeof(int32_t);
 }
 
 void CBuffer::Serialize(string &data, bool bSerialize)
@@ -133,7 +133,9 @@ void CBuffer::Serialize(string &data, bool bSerialize)
 
 void CBuffer::SerializeSize(size_t &size, bool bSerialize)
 {
-	Serialize((long&)size, bSerialize);
+	int32_t _size = size;
+	Serialize(_size, bSerialize);
+	size = _size;
 }
 
 void CBuffer::SerializeBinary(void *data, size_t size, bool bSerialize)
