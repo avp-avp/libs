@@ -15,7 +15,7 @@
 #	define HA_LINUX
 #endif
 
-#if defined(HAVE_LUA_H) || defined(HAVE_LUA5_2_LUA_H)
+#if defined(HAVE_LUA_H) || defined(HAVE_LUA5_2_LUA_H) || defined(HAVE_LUA5_3_LUA_H)
 #	define USE_LUA
 #endif 
 
