@@ -233,7 +233,7 @@ void CLog::VPrintf(int level, const char *Format, va_list marker)
 }
 
 
-void CLog::PrintBufferEx(int level, char *Preffix, const unsigned char *Buffer, int BufferSize)
+void CLog::PrintBufferEx(int level, const char *Preffix, const unsigned char *Buffer, int BufferSize)
 {
 	if (m_iConsoleLogLevel<level && m_iLogLevel<level)
 		return;
