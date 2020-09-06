@@ -33,7 +33,7 @@ const char *g_Topics[] =
 };
 
 CWBControl::CWBControl(const string &name)
-	:Name(name), fValue(0), Readonly(false), Changed(false), Type(Error), Max(100), LastError(0)
+	:Name(name), fValue(0), Readonly(false), Changed(false), Type(Error), Min(0), Max(100), LastError(0)
 {
 
 }
@@ -47,6 +47,10 @@ void CWBControl::enrich(const string &meta, const string &val)
 	else if (meta == "max")
 	{
 		Max = atoi(val);
+	}
+	else if (meta == "min")
+	{
+		Min = atoi(val);
 	}
 	else if (meta == "readonly")
 	{
@@ -252,8 +256,9 @@ void CWBDevice::createDeviceValues(string_map &v)
 	{
 		v[base + "/controls/" + i->first] = i->second->sValue;
 		v[base + "/controls/" + i->first +"/meta/type"] = g_Topics[i->second->Type];
-		if (i->second->Readonly)
-			v[base + "/controls/" + i->first + "/meta/readonly"] = "1";
+		if (i->second->Readonly) v[base + "/controls/" + i->first + "/meta/readonly"] = "1";
+		if (i->second->Min!=0) v[base + "/controls/" + i->first + "/meta/min"] = itoa(i->second->Min);
+		if (i->second->Max!=0) v[base + "/controls/" + i->first + "/meta/max"] = itoa(i->second->Max);
 	}
 	updateValues(v);
 }
