@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <math.h>
 #include "WBDevice.h"
 #ifdef USE_CONFIG
 	#include "../libutils/ConfigItem.h"
@@ -192,8 +193,12 @@ void CWBDevice::set(string Name, float Value)
 	if (i == m_Controls.end())
 		throw CHaException(CHaException::ErrBadParam, Name);
 
+	int digits = 2;
+	if (round(Value)*100==round(Value*100)) digits = 0;
+	else if (round(Value)*10==round(Value*10)) digits = 0;
+
 	i->second->fValue = Value;
-	i->second->sValue = ftoa(Value);
+	i->second->sValue = ftoa(Value, digits);
 	i->second->Changed = true;
 }
 
@@ -245,13 +250,12 @@ void CWBDevice::createDeviceValues(string_map &v)
 
 	for_each(CControlMap, m_Controls, i)
 	{
-		v[base + "/meta/name"] = m_Description;
 		v[base + "/controls/" + i->first] = i->second->sValue;
 		v[base + "/controls/" + i->first +"/meta/type"] = g_Topics[i->second->Type];
 		if (i->second->Readonly)
 			v[base + "/controls/" + i->first + "/meta/readonly"] = "1";
 	}
-	//UpdateValues(v);
+	updateValues(v);
 }
 
 void CWBDevice::updateValues(string_map &v)
