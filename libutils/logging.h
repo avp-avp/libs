@@ -58,8 +58,8 @@ public:
 	static void DisableConsole(bool bDisable){m_DisableConsole = bDisable;};
 	void Printf(int level, const char *Format, ...);
 	void VPrintf(int level, const char *Format, va_list argptr);
-	void PrintBufferEx(int level, char* Preffix, const char *Buffer, int BufferSize){PrintBufferEx(level, Preffix, (unsigned char*)Buffer, BufferSize);};
-	void PrintBufferEx(int level, char* Preffix, const unsigned char *Buffer, int BufferSize);
+	void PrintBufferEx(int level, const char* Preffix, const char *Buffer, int BufferSize){PrintBufferEx(level, Preffix, (unsigned char*)Buffer, BufferSize);};
+	void PrintBufferEx(int level, const char* Preffix, const unsigned char *Buffer, int BufferSize);
 	void PrintBuffer(int level, const char *Buffer, int BufferSize){PrintBuffer(level, (unsigned char*)Buffer, BufferSize);};
 	void PrintBuffer(int level, const unsigned char *Buffer, int BufferSize){PrintBufferEx(level, NULL, Buffer, BufferSize);};
 	

@@ -227,6 +227,7 @@ CConfigItem CConfigItem::getNode(string path, bool bMandatory) const
 	}
 }
 
+#if !defined(_LIBUTILS_USE_XML_LIBXML2) && defined(USE_JSON)
 void CConfigItem::getValues(configValues &values)  const
 {
 	values.empty();
@@ -237,6 +238,7 @@ void CConfigItem::getValues(configValues &values)  const
 		values[*name] = m_Node[*name];
 	}
 }
+#endif
 
 
 void CConfigItem::getList(string path, CConfigItemList &list)

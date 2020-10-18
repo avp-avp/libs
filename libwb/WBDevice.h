@@ -15,7 +15,7 @@ struct LIBWB_API CWBControl
 		Rgb, 
 		Text,
 		Generic,
-		Temperature, //	temperature	°C	float
+		Temperature, //	temperature	ï¿½C	float
 		RelativeHumidity, //	rel_humidity	%, RH	float, 0 - 100
 		AtmosphericPressure, //	atmospheric_pressure	millibar(100 Pa)	float
 		SoundLevel,
@@ -37,7 +37,7 @@ struct LIBWB_API CWBControl
 	bool Readonly, Changed;
 	string sValue;
 	float fValue;
-	int Max;
+	int Max, Min;
 	CWBControl(const string &name);
 	void enrich(const string &meta, const string &val);
 	static ControlType getType(const string & type);

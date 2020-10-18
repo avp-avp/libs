@@ -58,7 +58,7 @@ public:
 	int getInt(string path, bool bMandatory = true, int defaultValue = 0) const;
 	CConfigItem getNode(string path, bool bMandatory = true) const;
 	void getList(string path, CConfigItemList &list);
-#ifdef USE_JSON
+#if !defined(_LIBUTILS_USE_XML_LIBXML2) && defined(USE_JSON)
 	void getValues(configValues &values) const;
 #endif
 	
