@@ -325,6 +325,12 @@ void CWBDevice::enrichDevice(const string &meta, const string &val)
 	{
 		m_Description = val;
 	}
+	else if (meta == "driver")
+	{
+	}
+	else if (meta == "source")
+	{
+	}
 	else
 		throw CHaException(CHaException::ErrBadParam, "Unknown device meta '%s'", meta.c_str());
 }
