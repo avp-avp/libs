@@ -252,7 +252,7 @@ void CWBDevice::createDeviceValues(string_map &v)
 	string base = "/devices/" + m_Name;
 	v[base + "/meta/name"] = m_Description;
 	#ifdef PACKAGE_NAME
-		v[base + "/meta/source"] = PACKAGE_NAME;
+		v[base + "/meta/driver"] = PACKAGE_NAME;
 	#endif	
 
 	for_each(CControlMap, m_Controls, i)
