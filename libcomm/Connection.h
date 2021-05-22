@@ -39,4 +39,6 @@ public:
 	virtual bool isConnected(){ return m_Connected; };
 	virtual void OnSelect(CSupervisor *superviser) = 0;
 
+	static void Dump();
+
 };

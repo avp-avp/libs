@@ -5,7 +5,7 @@
 
 CIPListener::CIPListener(void)
 {
-	m_Name = "LISTEN null";
+	m_ConnectString = "LISTEN null";
 }
 
 CIPListener::~CIPListener(void)
@@ -14,7 +14,6 @@ CIPListener::~CIPListener(void)
 
 void CIPListener::Listen(int Port, string address)
 {
-	m_Name = "LISTEN "+itoa(Port);
 	//----------------------
 	// Create a SOCKET for listening for
 	// incoming connection requests.
@@ -42,6 +41,8 @@ void CIPListener::Listen(int Port, string address)
 	if (listen( m_Socket, SOMAXCONN ) == SOCKET_ERROR)
 		throw CHaException(CHaException::ErrCreateSocketError, "listen(%d) failed.\n", Port);
 
+	m_ConnectString = "LISTEN "+itoa(Port)+"("+itoa(m_Socket)+")";
+
 	m_Connected = true;
 }
 
@@ -49,7 +50,7 @@ void CIPListener::OnSelect(CSupervisor *superviser)
 {
 	SOCKET socket = accept(getSocket(), NULL, NULL);
 	
-	CIPConnection *conn = new CIPConnection(socket, "LISTEN ");
+	CIPConnection *conn = new CIPConnection(socket, "OnSelect at "+itoa(m_Socket));
 
 	superviser->OnNewConnectionEx(this, conn);
 }
