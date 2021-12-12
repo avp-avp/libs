@@ -35,7 +35,7 @@ const char *g_Topics[] =
 CWBControl::CWBControl(const string &name)
 	:Name(name), fValue(0), Readonly(false), Changed(false), Type(Error), Min(0), Max(100), LastError(0)
 {
-
+	//
 }
 
 void CWBControl::enrich(const string &meta, const string &val)
