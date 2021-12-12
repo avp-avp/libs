@@ -29,9 +29,14 @@
 *.app
 
 Makefile
+configure*
 
 #VC++
 *.vcxproj.filters
 *.vcxproj
 *.vcproj
 *.cd
+
+*.Plo
+*.in
+*.m4
