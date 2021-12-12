@@ -30,6 +30,8 @@
 
 Makefile
 configure*
+.deps/
+Makefile.in
 
 #VC++
 *.vcxproj.filters

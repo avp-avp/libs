@@ -4,7 +4,6 @@
 class LIBCOMM_API CIPListener :
 	public CIPConnection
 {
-	string m_Name;
 public:
 	CIPListener(void);
 	virtual ~CIPListener(void);
