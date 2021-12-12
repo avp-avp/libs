@@ -19,13 +19,13 @@ const char *g_Topics[] =
 	"rel_humidity",
 	"atmospheric_pressure",
 	"sound_level",
-	"PrecipitationRate", //(rainfall rate)	rainfall	mm per hour	float
-	"WindSpeed", //	wind_speed	m / s	float
+	"rainfall", //(rainfall rate)	rainfall	mm per hour	float
+	"wind_speed", //	wind_speed	m / s	float
 	"power", //	watt	float
 	"power_consumption", //		kWh	float
 	"voltage", //	volts	float
 	"water_flow", //	water_flow	m ^ 3 / hour	float
-	"WaterTotal", // consumption	water_consumption	m ^ 3	float
+	"water_consumption", // consumption	water_consumption	m ^ 3	float
 	"resistance", //	resistance	Ohm	float
 	"concentration", //	concentration	ppm	float(unsigned)
 	"lux",
