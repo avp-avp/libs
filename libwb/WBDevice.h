@@ -21,9 +21,9 @@ struct LIBWB_API CWBControl
 		SoundLevel,
 		PrecipitationRate, //(rainfall rate)	rainfall	mm per hour	float
 		WindSpeed, //	wind_speed	m / s	float
-		PowerPower, //	watt	float
+		Power, //	watt	float
 		PowerConsumption, //	power_consumption	kWh	float
-		VoltageVoltage, //	volts	float
+		Voltage, //	volts	float
 		WaterFlow, //	water_flow	m ^ 3 / hour	float
 		WaterTotal, // consumption	water_consumption	m ^ 3	float
 		Resistance, //	resistance	Ohm	float

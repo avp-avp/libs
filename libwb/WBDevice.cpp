@@ -21,8 +21,8 @@ const char *g_Topics[] =
 	"sound_level",
 	"PrecipitationRate", //(rainfall rate)	rainfall	mm per hour	float
 	"WindSpeed", //	wind_speed	m / s	float
-	"PowerPower", //	watt	float
-	"PowerConsumption", //	power_consumption	kWh	float
+	"power", //	watt	float
+	"power_consumption", //		kWh	float
 	"voltage", //	volts	float
 	"water_flow", //	water_flow	m ^ 3 / hour	float
 	"WaterTotal", // consumption	water_consumption	m ^ 3	float
