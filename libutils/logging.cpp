@@ -143,7 +143,7 @@ CLog::~CLog()
 		delete m_FileName;
 }
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(__USE_GNU)
 #else
 uint64_t gettid() {
     pthread_t ptid = pthread_self();
