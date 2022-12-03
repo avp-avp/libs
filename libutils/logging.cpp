@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#define _GNU_SOURCE
+#include <unistd.h>
 
 #include "logging.h"
 #include "strutils.h"
@@ -143,6 +145,7 @@ CLog::~CLog()
 		delete m_FileName;
 }
 
+/*
 #if defined(WIN32) || defined(__USE_GNU)
 #else
 uint64_t gettid() {
@@ -152,7 +155,7 @@ uint64_t gettid() {
     return threadId;
 }
 #endif
-
+*/
 
 void CLog::Printf(int level, const char *Format, ...)
 {
