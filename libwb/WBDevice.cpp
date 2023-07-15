@@ -261,7 +261,7 @@ void CWBDevice::createDeviceValues(string_map &v)
 		v[base + "/controls/" + i->first +"/meta/type"] = g_Topics[i->second->Type];
 		if (i->second->Readonly) v[base + "/controls/" + i->first + "/meta/readonly"] = "1";
 		if (i->second->Min!=0) v[base + "/controls/" + i->first + "/meta/min"] = itoa(i->second->Min);
-		if (i->second->Max!=100) v[base + "/controls/" + i->first + "/meta/max"] = itoa(i->second->Max);
+		if (i->second->Max!=0) v[base + "/controls/" + i->first + "/meta/max"] = itoa(i->second->Max);
 	}
 	updateValues(v);
 }
