@@ -189,7 +189,7 @@ string GetBasePath(BASE_PATH_TYPE type)
 			BasePath = "/opt/bin/";
 			break;
 		case BASE_PATH_CFG:
-			BasePath = "/opt/etc/";
+			BasePath = "/etc/";
 			break;
 		case BASE_PATH_LOG:
 			BasePath = "/run/";
@@ -216,4 +216,3 @@ string itoa(int i)
 	snprintf(Buffer, sizeof(Buffer), "%d",i);
 	return Buffer;
 }
-
