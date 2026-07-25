@@ -186,8 +186,24 @@ void CSupervisor::Poll(int timeoutSec, bool bInternal)
 				RemoveConnection(*i);
 			else if ((*i)->isConnected())
 			{
-				FD_SET((*i)->getSocket(), &fd_recv);
-				FD_SET((*i)->getSocket(), &fd_err);
+				int fd = (*i)->getSocket();
+
+				if (fd < 0)
+				{
+					CLog::GetLog("Main")->Printf(0, "Invalid fd=%d", fd);
+					continue;
+				}
+
+				if (fd >= FD_SETSIZE)
+				{
+					CLog::GetLog("Main")->Printf(0,
+						"FD too large: fd=%d FD_SETSIZE=%d",
+						fd,
+						FD_SETSIZE);
+					continue;
+				}
+				FD_SET(fd, &fd_recv);
+				FD_SET(fd, &fd_err);
 
 				if (fd_count<(*i)->getSocket())
 					fd_count=(*i)->getSocket();
