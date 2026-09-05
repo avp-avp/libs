@@ -67,7 +67,7 @@ public:
 	void SetLogLevel(int level){m_iLogLevel = level;};
 	void SetConsoleLogLevel(int level){m_iConsoleLogLevel = level;};
 
-	bool isOpen();
+	bool isOpen() const noexcept;
 };
 
 #endif

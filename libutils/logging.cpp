@@ -206,7 +206,9 @@ void CLog::VPrintf(int level, const char *Format, va_list marker)
 		#else
 			long Time=time(NULL);
 			strftime(Buffer,sizeof(Buffer),"%d/%m %H:%M:%S ",localtime(&Time));
-			sprintf(Buffer+strlen(Buffer), "[%d] ",  getpid()/*, gettid()*/);
+			const size_t offset = strlen(Buffer);
+			snprintf(Buffer + offset, sizeof(Buffer) - offset, "[%d] ",
+				getpid()/*, gettid()*/);
 		#endif
 
 		if (m_iLogLevel>=level)
@@ -341,8 +343,8 @@ void CLog::Open(const char *FileName)
 	m_iConsoleLogLevel = m_iLogLevel = 100;
 }
 
-bool CLog::isOpen()
+bool CLog::isOpen() const noexcept
 {
-	return this==NULL?false:m_FileName!=NULL;
+	return m_FileName != nullptr;
 }
 

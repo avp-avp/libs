@@ -230,7 +230,7 @@ CConfigItem CConfigItem::getNode(string path, bool bMandatory) const
 #if !defined(_LIBUTILS_USE_XML_LIBXML2) && defined(USE_JSON)
 void CConfigItem::getValues(configValues &values)  const
 {
-	values.empty();
+	values.clear();
 	string_vector v = m_Node.getMemberNames();
 
 	for_each(string_vector, v, name)
