@@ -22,16 +22,24 @@ CLock::CLock()
 }
 
 
-CLock::~CLock()
+CLock::~CLock() noexcept
 {
 #ifdef WIN32
 	DeleteCriticalSection(&cs);
 #else
-	if (pthread_mutex_destroy(&cs))
+	const int mutexResult = pthread_mutex_destroy(&cs);
+	if (mutexResult)
 	{
-		throw CHaException(CHaException::ErrSyncFailed, "Cannot destroy mutex");
+		fprintf(stderr, "CLock: cannot destroy mutex: %s (%d)\n",
+			strerror(mutexResult), mutexResult);
 	}
-	pthread_mutexattr_destroy(&cs_attr);
+
+	const int attrResult = pthread_mutexattr_destroy(&cs_attr);
+	if (attrResult)
+	{
+		fprintf(stderr, "CLock: cannot destroy mutex attributes: %s (%d)\n",
+			strerror(attrResult), attrResult);
+	}
 	
 #endif
 }
@@ -91,19 +99,23 @@ CEvent::CEvent(bool InitState)
 #endif
 }
 
-CEvent::~CEvent()
+CEvent::~CEvent() noexcept
 {
 #ifdef WIN32
 	CloseHandle(m_Event);
 #else
-	if (pthread_cond_destroy(&m_Cond))
+	const int condResult = pthread_cond_destroy(&m_Cond);
+	if (condResult)
 	{
-		throw CHaException(CHaException::ErrSyncFailed, "Cannot destroy cond");	
+		fprintf(stderr, "CEvent: cannot destroy condition variable: %s (%d)\n",
+			strerror(condResult), condResult);
 	}
 	
-	if(pthread_mutex_destroy(&m_Mutex))
+	const int mutexResult = pthread_mutex_destroy(&m_Mutex);
+	if (mutexResult)
 	{
-		throw CHaException(CHaException::ErrSyncFailed, "Cannot destroy mutex");	
+		fprintf(stderr, "CEvent: cannot destroy mutex: %s (%d)\n",
+			strerror(mutexResult), mutexResult);
 	}
 #endif
 }
