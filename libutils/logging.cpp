@@ -204,7 +204,7 @@ void CLog::VPrintf(int level, const char *Format, va_list marker)
 			GetLocalTime(&t);
 			snprintf(Buffer,sizeof(Buffer), "%02u/%02u %02u:%02u:%02u.%03lu [%03d] ",t.wDay,t.wMonth,t.wHour,t.wMinute,t.wSecond,t.wMilliseconds, level);
 		#else
-			long Time=time(NULL);
+			time_t Time=time(NULL);
 			strftime(Buffer,sizeof(Buffer),"%d/%m %H:%M:%S ",localtime(&Time));
 			const size_t offset = strlen(Buffer);
 			snprintf(Buffer + offset, sizeof(Buffer) - offset, "[%d] ",
